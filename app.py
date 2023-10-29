@@ -59,25 +59,29 @@ def create_bmp(file_name="output.bmp", width=10, height=10, depth=24):
         file_bytearray[bmp_info_header.HEADER_SIZE_OFFSET:bmp_info_header.HEADER_SIZE_OFFSET+bmp_info_header.HEADER_SIZE_BYTES] = packed_bmp_info_header
 
         # hydrate the header with the number of color planes (must be 1 according to wikipedia)
+        logging.debug(f"setting the number of color planes to 1")
         packed_number_of_planes = struct.pack('<h', 1)
         file_bytearray[bmp_info_header.NUMBER_OF_COLOR_PLANES_OFFSET:bmp_info_header.NUMBER_OF_COLOR_PLANES_OFFSET+bmp_info_header.NUMBER_OF_COLOR_PLANES_BYTES] = packed_number_of_planes
 
         # hydrate the color bit-depth.
+        logging.debug(f"setting the color depth to {depth}")
         packed_bit_depth = struct.pack('<h', depth)
         file_bytearray[bmp_info_header.PIXEL_DEPTH_OFFSET:bmp_info_header.PIXEL_DEPTH_OFFSET+bmp_info_header.PIXEL_DEPTH_BYTES] = packed_bit_depth
 
         # hydrate the header with the offset of the pixel array (after the header data)
-        logging.debug(f"Pixel Array Offset is at {len(file_bytearray)}.")
+        logging.debug(f"pixel Array Offset is at {len(file_bytearray)}.")
         packed_pixels_address = struct.pack('<i', len(file_bytearray))
         file_bytearray[bmp_header.PIXEL_ARRAY_STARTING_ADDRESS_OFFSET:bmp_header.PIXEL_ARRAY_STARTING_ADDRESS_OFFSET+bmp_header.PIXEL_ARRAY_STARTING_ADDRESS_BYTES] = packed_pixels_address
 
         file_bytearray.extend(pixel_array)
 
         # Lastly, hydrate the header with the size of the entire file
+        logging.debug(f"total file size: {len(file_bytearray)} bytes")
         packed_file_size = struct.pack('<i', len(file_bytearray))
         file_bytearray[bmp_header.SIZE_OFFSET:bmp_header.SIZE_OFFSET+bmp_header.SIZE_BYTES] = packed_file_size
 
         file.write(file_bytearray)
+        logging.info(f"finished writing {file_name}")
         logging.debug(file_bytearray)
 
 def main():
