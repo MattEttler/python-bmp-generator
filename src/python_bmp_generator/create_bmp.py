@@ -1,8 +1,8 @@
 import logging
 import struct
 
-import bmp_header
-import bmp_info_header
+from python_bmp_generator import bmp_header
+from python_bmp_generator import bmp_info_header
 
 
 def create_bmp(
@@ -50,7 +50,7 @@ def create_bmp(
         padding_bytes_per_row = (byte_alignment_size - pixel_bytes_per_row) \
             % byte_alignment_size
         pixel_array = bytearray(
-            (([red, green, blue]*width) + ([0]*padding_bytes_per_row))
+            (([blue, green, red]*width) + ([0]*padding_bytes_per_row))
             * height)
 
         logging.debug(f"bytes_per_pixel: {bytes_per_pixel}")

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-bmp-generator"
+version = "0.0.1"
+authors = [
+  { name="Matt Ettler", email="mattettler@protonmail.com" },
+]
+description = "Generate bitmap images"
+readme = "README.md"
+requires-python = ">=3.11.2"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+python-bmp-generator = "python_bmp_generator:main"
+
+[project.urls]
+"Homepage" = "https://github.com/MattEttler/python-bmp-generator"
+"Bug Tracker" = "https://github.com/MattEttler/python-bmp-generator/issues"
