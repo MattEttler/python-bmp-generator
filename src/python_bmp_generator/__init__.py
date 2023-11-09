@@ -1,5 +1,7 @@
-from .create_bmp import create_bmp
 import argparse
+import logging
+
+from .create_bmp import create_bmp
 
 def main():
     parser = argparse.ArgumentParser(description='Generate bitmap images.', prog='python-bmp-generator OR python3 -m python-bmp-generator',)
@@ -15,6 +17,12 @@ def main():
             help='the green-value of the image that will be generated within the rage 0..255. (default: 0)')
     parser.add_argument('-b', '--blue', type=int, default=255, choices=range(0,256), required=False, metavar='',
             help='the blue-value of the image that will be generated within the range 0..255. (default: 255)')
+    parser.add_argument('-v', '--verbosity', type=int, default=logging.WARNING, choices=[logging.NOTSET, logging.DEBUG, logging.INFO, logging.WARNING, logging.ERROR, logging.CRITICAL], required=False, metavar='',
+            help='the verbosity level of the output. 0=NOTSET, 10=DEBUG, 20=INFO, 30=WARNING, 40=ERROR, 50=CRITICAL. (default:30)')
+
 
     args = parser.parse_args()
+
+    logging.basicConfig(level=args.verbosity)
+
     create_bmp(file_name=args.output, width=args.width, height=args.height, red=args.red, green=args.green, blue=args.blue)
