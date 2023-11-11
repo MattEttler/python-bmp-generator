@@ -49,9 +49,10 @@ def create_bmp(
         pixel_bytes_per_row = (bytes_per_pixel * width)
         padding_bytes_per_row = (byte_alignment_size - pixel_bytes_per_row) \
             % byte_alignment_size
-        pixel_array = bytearray(
-            (([blue, green, red]*width) + ([0]*padding_bytes_per_row))
-            * height)
+        
+        unprocessed_pixels = [([blue, green, red])*width]*height if (red > 0 or green > 0 or blue > 0) else generate_rainbow(width, height)
+        logging.debug(unprocessed_pixels)
+        pixel_array = bytearray(pixel for row in unprocessed_pixels for pixel in (row+([0]*padding_bytes_per_row)))
 
         logging.debug(f"bytes_per_pixel: {bytes_per_pixel}")
         logging.debug(f"pixel array created with {len(pixel_array)} bytes {padding_bytes_per_row*height} of which are padding.")
@@ -106,6 +107,24 @@ def create_bmp(
         file.write(file_bytearray)
         logging.info(f"finished writing {file_name}")
         logging.debug(file_bytearray)
+
+
+
+def generate_rainbow(width, height):
+    max_color_value = 255
+    pixel_spectrum_portion = max_color_value / (width / 3)
+    green_offset = width // 2
+    blue_offset = width
+    pixel_array = []
+    for y in range(height):
+        row = []
+        for x in range(width):
+            red = max(0, min(max_color_value, max_color_value - abs(pixel_spectrum_portion*(x))))
+            green = max(0, min(max_color_value, max_color_value - abs(pixel_spectrum_portion*(x - green_offset))))
+            blue = max(0, min(max_color_value, max_color_value - abs(pixel_spectrum_portion*(x - blue_offset))))
+            row.extend([int(red), int(green), int(blue)])
+        pixel_array.append(row)
+    return pixel_array
 
 
 def main():
